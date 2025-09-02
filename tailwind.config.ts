@@ -26,11 +26,27 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					foreground: 'hsl(var(--primary-foreground))',
+					light: 'hsl(var(--primary-light))',
+					glow: 'hsl(var(--primary-glow))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
 					foreground: 'hsl(var(--secondary-foreground))'
+				},
+				'trust-navy': {
+					DEFAULT: 'hsl(var(--trust-navy))',
+					foreground: 'hsl(var(--trust-navy-foreground))'
+				},
+				'medical-white': 'hsl(var(--medical-white))',
+				'medical-accent': {
+					DEFAULT: 'hsl(var(--medical-accent))',
+					foreground: 'hsl(var(--medical-accent-foreground))'
+				},
+				health: {
+					good: 'hsl(var(--health-good))',
+					warning: 'hsl(var(--health-warning))',
+					critical: 'hsl(var(--health-critical))'
 				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
@@ -62,6 +78,21 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				}
+			},
+			backgroundImage: {
+				'gradient-kerala': 'var(--gradient-kerala)',
+				'gradient-backwater': 'var(--gradient-backwater)',
+				'gradient-trust': 'var(--gradient-trust)',
+				'gradient-health': 'var(--gradient-health)'
+			},
+			boxShadow: {
+				'kerala': 'var(--shadow-kerala)',
+				'medical': 'var(--shadow-medical)',
+				'glow': 'var(--shadow-glow)'
+			},
+			transitionTimingFunction: {
+				'smooth': 'var(--transition-smooth)',
+				'bounce': 'var(--transition-bounce)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

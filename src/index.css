@@ -2,41 +2,78 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Kerala Migrant Health System - Design System
+All colors MUST be HSL. Kerala-inspired palette with government trust elements.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Kerala-inspired base colors */
+    --background: 155 30% 97%;
+    --foreground: 155 25% 15%;
 
+    /* Card and surfaces */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 155 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 155 25% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Kerala emerald primary - coconut palm green */
+    --primary: 155 65% 35%;
+    --primary-foreground: 0 0% 98%;
+    --primary-light: 155 45% 45%;
+    --primary-glow: 155 55% 55%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Backwater blue secondary */
+    --secondary: 200 45% 88%;
+    --secondary-foreground: 155 25% 15%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Government trust navy */
+    --trust-navy: 215 60% 25%;
+    --trust-navy-foreground: 0 0% 98%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Medical white accents */
+    --medical-white: 0 0% 99%;
+    --medical-accent: 155 20% 90%;
+    --medical-accent-foreground: 155 25% 25%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Health status colors */
+    --health-good: 120 60% 45%;
+    --health-warning: 45 85% 55%;
+    --health-critical: 0 75% 55%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Muted variants */
+    --muted: 155 15% 92%;
+    --muted-foreground: 155 10% 45%;
 
-    --radius: 0.5rem;
+    /* Accent - spice gold */
+    --accent: 35 75% 85%;
+    --accent-foreground: 155 25% 20%;
+
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 155 15% 85%;
+    --input: 155 15% 92%;
+    --ring: 155 65% 35%;
+
+    --radius: 0.75rem;
+
+    /* Custom Kerala gradients */
+    --gradient-kerala: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
+    --gradient-backwater: linear-gradient(180deg, hsl(var(--secondary)), hsl(200 35% 92%));
+    --gradient-trust: linear-gradient(135deg, hsl(var(--trust-navy)), hsl(215 45% 35%));
+    --gradient-health: linear-gradient(90deg, hsl(var(--health-good)), hsl(var(--primary-glow)));
+    
+    /* Shadows with Kerala theme */
+    --shadow-kerala: 0 10px 30px -10px hsl(var(--primary) / 0.2);
+    --shadow-medical: 0 4px 20px -5px hsl(var(--trust-navy) / 0.15);
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.3);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,33 +93,60 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Kerala dark theme variants */
+    --background: 155 25% 8%;
+    --foreground: 155 15% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 155 25% 10%;
+    --card-foreground: 155 15% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 155 25% 10%;
+    --popover-foreground: 155 15% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 155 55% 55%;
+    --primary-foreground: 155 25% 15%;
+    --primary-light: 155 45% 65%;
+    --primary-glow: 155 50% 70%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 200 25% 15%;
+    --secondary-foreground: 155 15% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --trust-navy: 215 50% 65%;
+    --trust-navy-foreground: 155 25% 15%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --medical-white: 155 25% 12%;
+    --medical-accent: 155 15% 18%;
+    --medical-accent-foreground: 155 15% 85%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --health-good: 120 55% 55%;
+    --health-warning: 45 80% 65%;
+    --health-critical: 0 70% 65%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --muted: 155 15% 15%;
+    --muted-foreground: 155 10% 65%;
+
+    --accent: 35 60% 75%;
+    --accent-foreground: 155 25% 20%;
+
+    --destructive: 0 70% 65%;
+    --destructive-foreground: 155 15% 95%;
+
+    --border: 155 15% 20%;
+    --input: 155 15% 18%;
+    --ring: 155 55% 55%;
+
+    /* Dark theme gradients */
+    --gradient-kerala: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
+    --gradient-backwater: linear-gradient(180deg, hsl(var(--secondary)), hsl(200 25% 18%));
+    --gradient-trust: linear-gradient(135deg, hsl(var(--trust-navy)), hsl(215 40% 75%));
+    --gradient-health: linear-gradient(90deg, hsl(var(--health-good)), hsl(var(--primary-glow)));
+    
+    /* Dark theme shadows */
+    --shadow-kerala: 0 10px 30px -10px hsl(var(--primary) / 0.3);
+    --shadow-medical: 0 4px 20px -5px hsl(var(--trust-navy) / 0.25);
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.4);
+
+    /* Sidebar dark theme */
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
