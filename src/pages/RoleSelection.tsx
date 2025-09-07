@@ -5,6 +5,7 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Users, Building2, Shield, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import keralaHeroImage from '@/assets/kerala-health-hero.jpg';
+import swasthyamLogo from '@/assets/swasthyam-logo.png';
 
 const roles = [
   {
@@ -59,12 +60,12 @@ export default function RoleSelection() {
           {/* Header */}
           <header className="flex justify-between items-center p-6">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-medical-white rounded-full flex items-center justify-center shadow-medical">
-                <Shield className="h-6 w-6 text-primary" />
+              <div className="w-12 h-12 bg-medical-white rounded-lg flex items-center justify-center shadow-medical p-1">
+                <img src={swasthyamLogo} alt="Swasthyam Logo" className="w-full h-full object-contain" />
               </div>
               <div>
-                <h1 className="text-white text-xl font-bold">Kerala Migrant Health</h1>
-                <p className="text-white/90 text-sm">Athidhi Portal Integration</p>
+                <h1 className="text-white text-xl font-bold">Swasthyam</h1>
+                <p className="text-white/90 text-sm">Kerala's Health Portal</p>
               </div>
             </div>
             <LanguageSwitcher />
@@ -74,8 +75,8 @@ export default function RoleSelection() {
           <div className="flex-1 flex items-center justify-center text-center px-6">
             <div className="max-w-2xl">
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                {selectedLanguage === 'ml' ? 'കേരള കുടിയേറ്റ ആരോഗ്യ രേഖാ പരിപാലന സംവിധാനം' : 
-                 'Kerala Migrant Health Record Management System'}
+                {selectedLanguage === 'ml' ? 'കേരള കുടിയേറ്റ തൊഴിലാളികളുടെ ആരോഗ്യ രേഖാ സംവിധാനം' : 
+                 'Kerala\'s Migrant Workers Health Record System'}
               </h2>
               <p className="text-xl text-white/90 mb-8">
                 {selectedLanguage === 'ml' ? 'നിങ്ങളുടെ ആരോഗ്യ രേഖകൾ സുരക്ഷിതവും ആക്സസ് ചെയ്യാവുന്നതുമാക്കുന്നു' : 
@@ -133,7 +134,7 @@ export default function RoleSelection() {
         {/* Footer Info */}
         <div className="mt-16 text-center">
           <p className="text-muted-foreground mb-4">
-            {selectedLanguage === 'ml' ? 'അഥിതി പോർട്ടൽ സംയോജനത്തോടെ' : 'Powered by Athidhi Portal Integration'}
+            {selectedLanguage === 'ml' ? 'സ്വാസ്ഥ്യം പോർട്ടൽ സംയോജനത്തോടെ' : 'Powered by Swasthyam Portal Integration'}
           </p>
           <div className="flex justify-center gap-6 text-sm text-muted-foreground">
             <span>Government of Kerala</span>
