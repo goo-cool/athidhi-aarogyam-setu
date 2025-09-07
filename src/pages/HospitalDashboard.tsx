@@ -20,32 +20,39 @@ import {
   Users,
   TrendingUp,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  QrCode,
+  Flag,
+  Download
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import swasthyamLogo from '@/assets/swasthyam-logo.png';
 
 // Mock data
 const recentPatients = [
   {
-    id: 'KL2024MH789456',
+    id: 'KL2024001234',
     name: 'രാജേഷ് കുമാർ (Rajesh Kumar)',
     lastVisit: '2024-01-15',
     status: 'Normal',
-    tests: ['Blood Test', 'COVID-19 Test']
+    tests: ['Blood Test', 'COVID-19 Test'],
+    flagged: false
   },
   {
-    id: 'KL2024MH789457',
+    id: 'KL2024001235',
     name: 'अमित शर्मा (Amit Sharma)', 
     lastVisit: '2024-01-14',
     status: 'Follow-up Required',
-    tests: ['X-Ray', 'Blood Pressure']
+    tests: ['X-Ray', 'Blood Pressure'],
+    flagged: false
   },
   {
-    id: 'KL2024MH789458',
+    id: 'KL2024001236',
     name: 'রহিম আহমেদ (Rahim Ahmed)',
     lastVisit: '2024-01-13',
     status: 'Critical',
-    tests: ['ECG', 'Blood Test']
+    tests: ['ECG', 'Blood Test'],
+    flagged: true
   }
 ];
 
@@ -53,7 +60,8 @@ const hospitalStats = {
   totalPatients: 1247,
   todayVisits: 42,
   pendingReports: 18,
-  emergencyCases: 3
+  emergencyCases: 3,
+  flaggedCases: 5
 };
 
 export default function HospitalDashboard() {
@@ -64,7 +72,8 @@ export default function HospitalDashboard() {
     testType: '',
     results: '',
     doctor: '',
-    notes: ''
+    notes: '',
+    isFlagged: false
   });
 
   const handleBack = () => {
@@ -78,24 +87,38 @@ export default function HospitalDashboard() {
       testType: '',
       results: '',
       doctor: '',
-      notes: ''
+      notes: '',
+      isFlagged: false
     });
+  };
+
+  const handleQRScan = () => {
+    alert('QR Scanner would open here for instant patient lookup');
+  };
+
+  const handleFlagCase = (patientId: string) => {
+    alert(`Patient ${patientId} flagged for infectious disease monitoring`);
   };
 
   return (
     <div className="min-h-screen bg-gradient-backwater">
       {/* Header */}
-      <header className="bg-medical-white shadow-medical">
+      <header className="bg-gradient-trust text-trust-navy-foreground shadow-medical">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <EnhancedButton variant="ghost" onClick={handleBack} className="gap-2">
+              <EnhancedButton variant="ghost" onClick={handleBack} className="gap-2 text-trust-navy-foreground hover:bg-white/10">
                 <ArrowLeft className="h-4 w-4" />
                 Back
               </EnhancedButton>
-              <div>
-                <h1 className="text-xl font-bold text-foreground">Hospital Dashboard</h1>
-                <p className="text-sm text-muted-foreground">Government Medical College, Kozhikode</p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-medical-white rounded-lg flex items-center justify-center p-1">
+                  <img src={swasthyamLogo} alt="Swasthyam Logo" className="w-full h-full object-contain" />
+                </div>
+                <div>
+                  <h1 className="text-lg font-bold">Hospital Dashboard</h1>
+                  <p className="text-sm opacity-90">Government Medical College, Kozhikode</p>
+                </div>
               </div>
             </div>
             <LanguageSwitcher />
@@ -105,7 +128,7 @@ export default function HospitalDashboard() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
           <Card className="shadow-medical">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -153,14 +176,106 @@ export default function HospitalDashboard() {
               </div>
             </CardContent>
           </Card>
+
+          <Card className="shadow-medical">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Flagged Cases</p>
+                  <p className="text-2xl font-bold text-foreground">{hospitalStats.flaggedCases}</p>
+                </div>
+                <Flag className="h-8 w-8 text-health-critical" />
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
-        <Tabs defaultValue="upload" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+        <Tabs defaultValue="search" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="search">Search Workers</TabsTrigger>
             <TabsTrigger value="upload">Upload Results</TabsTrigger>
             <TabsTrigger value="patients">Patient Records</TabsTrigger>
-            <TabsTrigger value="reports">Generate Reports</TabsTrigger>
+            <TabsTrigger value="reports">Hospital Reports</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="search">
+            <Card className="shadow-kerala">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Search className="h-5 w-5" />
+                  Search Workers
+                </CardTitle>
+                <CardDescription>
+                  Search workers by ID, name, or scan QR Health Card
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <Input
+                      placeholder="Search by UHID, name, or phone number..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  <EnhancedButton variant="trust" className="gap-2">
+                    <Search className="h-4 w-4" />
+                    Search
+                  </EnhancedButton>
+                  <EnhancedButton variant="kerala" className="gap-2" onClick={handleQRScan}>
+                    <QrCode className="h-4 w-4" />
+                    Scan QR
+                  </EnhancedButton>
+                </div>
+
+                <div className="space-y-4">
+                  {recentPatients.map((patient) => (
+                    <div key={patient.id} className="border rounded-lg p-4 hover:bg-medical-accent/20 transition-colors">
+                      <div className="flex justify-between items-start mb-3">
+                        <div>
+                          <h4 className="font-medium text-foreground flex items-center gap-2">
+                            {patient.name}
+                            {patient.flagged && <Flag className="h-4 w-4 text-health-critical" />}
+                          </h4>
+                          <p className="text-sm text-muted-foreground">UHID: {patient.id}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge 
+                            variant="outline" 
+                            className={
+                              patient.status === 'Normal' 
+                                ? 'bg-health-good/10 text-health-good border-health-good/30'
+                                : patient.status === 'Critical'
+                                ? 'bg-health-critical/10 text-health-critical border-health-critical/30'
+                                : 'bg-health-warning/10 text-health-warning border-health-warning/30'
+                            }
+                          >
+                            {patient.status}
+                          </Badge>
+                          {patient.status === 'Critical' && (
+                            <EnhancedButton 
+                              size="sm" 
+                              variant="medical" 
+                              onClick={() => handleFlagCase(patient.id)}
+                            >
+                              Flag Case
+                            </EnhancedButton>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center text-sm text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          Last Visit: {patient.lastVisit}
+                        </span>
+                        <span>Tests: {patient.tests.join(', ')}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           <TabsContent value="upload">
             <Card className="shadow-kerala">
@@ -176,10 +291,10 @@ export default function HospitalDashboard() {
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="patientId">Patient ID / UHID</Label>
+                    <Label htmlFor="patientId">Patient UHID</Label>
                     <Input
                       id="patientId"
-                      placeholder="Enter Patient ID or UHID"
+                      placeholder="Enter Patient UHID"
                       value={uploadForm.patientId}
                       onChange={(e) => setUploadForm({...uploadForm, patientId: e.target.value})}
                     />
@@ -197,6 +312,7 @@ export default function HospitalDashboard() {
                         <SelectItem value="ecg">ECG</SelectItem>
                         <SelectItem value="general-checkup">General Checkup</SelectItem>
                         <SelectItem value="vaccination">Vaccination</SelectItem>
+                        <SelectItem value="infectious-disease">Infectious Disease Test</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -234,6 +350,18 @@ export default function HospitalDashboard() {
                   />
                 </div>
 
+                <div className="flex items-center gap-2">
+                  <input 
+                    type="checkbox" 
+                    id="flagCase"
+                    checked={uploadForm.isFlagged}
+                    onChange={(e) => setUploadForm({...uploadForm, isFlagged: e.target.checked})}
+                  />
+                  <Label htmlFor="flagCase" className="text-sm text-health-critical">
+                    Flag as infectious disease case
+                  </Label>
+                </div>
+
                 <div className="flex gap-4">
                   <EnhancedButton variant="kerala" className="gap-2" onClick={handleUpload}>
                     <Upload className="h-4 w-4" />
@@ -255,51 +383,29 @@ export default function HospitalDashboard() {
                   Patient Records
                 </CardTitle>
                 <CardDescription>
-                  Search and manage migrant worker health records
+                  View and manage migrant worker health records
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="flex gap-4 mb-6">
-                  <div className="flex-1">
-                    <Input
-                      placeholder="Search by name, ID, or phone number..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                  <EnhancedButton variant="trust" className="gap-2">
-                    <Search className="h-4 w-4" />
-                    Search
-                  </EnhancedButton>
-                </div>
-
                 <div className="space-y-4">
                   {recentPatients.map((patient) => (
-                    <div key={patient.id} className="border rounded-lg p-4 hover:bg-medical-accent/20 transition-colors">
+                    <div key={patient.id} className="border rounded-lg p-4">
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <h4 className="font-medium text-foreground">{patient.name}</h4>
-                          <p className="text-sm text-muted-foreground">ID: {patient.id}</p>
+                          <p className="text-sm text-muted-foreground">UHID: {patient.id}</p>
                         </div>
-                        <Badge 
-                          variant="outline" 
-                          className={
-                            patient.status === 'Normal' 
-                              ? 'bg-health-good/10 text-health-good border-health-good/30'
-                              : patient.status === 'Critical'
-                              ? 'bg-health-critical/10 text-health-critical border-health-critical/30'
-                              : 'bg-health-warning/10 text-health-warning border-health-warning/30'
-                          }
-                        >
-                          {patient.status}
-                        </Badge>
+                        <div className="flex gap-2">
+                          <EnhancedButton size="sm" variant="trust">
+                            View History
+                          </EnhancedButton>
+                          <EnhancedButton size="sm" variant="medical">
+                            Add Record
+                          </EnhancedButton>
+                        </div>
                       </div>
-                      <div className="flex justify-between items-center text-sm text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <Calendar className="h-3 w-3" />
-                          Last Visit: {patient.lastVisit}
-                        </span>
-                        <span>Tests: {patient.tests.join(', ')}</span>
+                      <div className="text-sm text-muted-foreground">
+                        Last Visit: {patient.lastVisit} | Status: {patient.status}
                       </div>
                     </div>
                   ))}
@@ -313,25 +419,28 @@ export default function HospitalDashboard() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <TrendingUp className="h-5 w-5" />
-                  Generate Reports
+                  Hospital Reports
                 </CardTitle>
                 <CardDescription>
-                  Generate health reports and analytics for migrant workers
+                  Generate hospital-wise statistics and reports
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
-                    <h4 className="font-medium">Health Summary Reports</h4>
+                    <h4 className="font-medium">Daily Reports</h4>
                     <div className="space-y-2">
-                      <EnhancedButton variant="medical" className="w-full justify-start">
-                        Daily Health Summary
+                      <EnhancedButton variant="medical" className="w-full justify-start gap-2">
+                        <Download className="h-4 w-4" />
+                        Daily Patient Summary
                       </EnhancedButton>
-                      <EnhancedButton variant="medical" className="w-full justify-start">
-                        Weekly Health Report
+                      <EnhancedButton variant="medical" className="w-full justify-start gap-2">
+                        <Download className="h-4 w-4" />
+                        Test Results Report
                       </EnhancedButton>
-                      <EnhancedButton variant="medical" className="w-full justify-start">
-                        Monthly Statistics
+                      <EnhancedButton variant="medical" className="w-full justify-start gap-2">
+                        <Download className="h-4 w-4" />
+                        Emergency Cases Log
                       </EnhancedButton>
                     </div>
                   </div>
@@ -339,14 +448,17 @@ export default function HospitalDashboard() {
                   <div className="space-y-4">
                     <h4 className="font-medium">Compliance Reports</h4>
                     <div className="space-y-2">
-                      <EnhancedButton variant="trust" className="w-full justify-start">
+                      <EnhancedButton variant="trust" className="w-full justify-start gap-2">
+                        <Download className="h-4 w-4" />
                         Vaccination Records
                       </EnhancedButton>
-                      <EnhancedButton variant="trust" className="w-full justify-start">
-                        Health Screening Report
+                      <EnhancedButton variant="trust" className="w-full justify-start gap-2">
+                        <Download className="h-4 w-4" />
+                        Flagged Cases Report
                       </EnhancedButton>
-                      <EnhancedButton variant="trust" className="w-full justify-start">
-                        Emergency Cases Report
+                      <EnhancedButton variant="trust" className="w-full justify-start gap-2">
+                        <Download className="h-4 w-4" />
+                        Monthly Statistics
                       </EnhancedButton>
                     </div>
                   </div>
@@ -355,7 +467,7 @@ export default function HospitalDashboard() {
                 <div className="bg-muted/30 rounded-lg p-4">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <CheckCircle className="h-4 w-4" />
-                    All reports are automatically synced with the Kerala Health Department and Labour Department
+                    All reports are automatically synced with the Kerala Health Department and stored in DigiLocker
                   </div>
                 </div>
               </CardContent>

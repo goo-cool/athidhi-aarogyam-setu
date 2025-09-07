@@ -3,96 +3,166 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { EnhancedButton } from '@/components/ui/enhanced-button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { 
-  User, 
+  ArrowLeft, 
+  Download, 
   QrCode, 
-  FileText, 
-  Calendar, 
+  User, 
   MapPin, 
   Phone, 
-  Mail, 
-  Download,
-  ArrowLeft,
-  Activity,
+  Calendar,
   Heart,
-  Thermometer,
-  Stethoscope
+  FileText,
+  AlertCircle,
+  CheckCircle,
+  Building,
+  Siren,
+  Shield,
+  Bell
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import qrHealthCard from '@/assets/qr-health-card.jpg';
+import swasthyamLogo from '@/assets/swasthyam-logo.png';
 
-// Mock data for demonstration
-const workerData = {
+// Mock data
+const workerProfile = {
   name: 'രാജേഷ് കുമാർ',
   nameEn: 'Rajesh Kumar',
-  aadhaar: '****-****-8765',
-  uhid: 'KL2024MH789456',
-  photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-  contact: {
-    phone: '+91 98765 43210',
-    email: 'rajesh.kumar@email.com',
-    address: 'Kozhikode, Kerala'
-  },
-  healthStatus: 'Good',
-  lastCheckup: '2024-01-15',
+  aadhaarNumber: '****-****-3456',
+  uhid: 'KL2024001234',
+  phoneNumber: '+91 98765 43210',
+  dateOfBirth: '15/08/1990',
+  address: 'തിരുവനന്തപുരം, കേരളം',
+  addressEn: 'Thiruvananthapuram, Kerala',
+  employer: 'കേരള കൺസ്ട്രക്ഷൻ കമ്പനി',
+  employerEn: 'Kerala Construction Company',
+  workLocation: 'കൊച്ചി',
+  workLocationEn: 'Kochi',
   emergencyContact: {
-    name: 'സുനിത കുമാർ (Sunita Kumar)',
-    phone: '+91 98765 43211',
-    relation: 'Spouse'
+    name: 'സുനിത കുമാർ',
+    nameEn: 'Sunita Kumar',
+    relation: 'ഭാര്യ',
+    relationEn: 'Wife',
+    phone: '+91 98765 43211'
   }
 };
 
 const healthRecords = [
   {
-    date: '2024-01-15',
-    hospital: 'Government Medical College, Kozhikode',
-    type: 'Health Checkup',
-    status: 'Normal',
-    doctor: 'Dr. Priya Nair'
+    id: 1,
+    type: 'vaccination',
+    title: 'COVID-19 Vaccination',
+    titleMl: 'കോവിഡ്-19 വാക്സിനേഷൻ',
+    date: '15/03/2024',
+    hospital: 'Government General Hospital, Kochi',
+    hospitalMl: 'ഗവൺമെന്റ് ജനറൽ ഹോസ്പിറ്റൽ, കൊച്ചി',
+    status: 'completed',
+    details: '2nd Booster Dose - Covishield'
   },
   {
-    date: '2024-01-10',
-    hospital: 'Primary Health Centre, Kakkanad',
-    type: 'COVID-19 Test',
-    status: 'Negative',
-    doctor: 'Dr. Suresh Kumar'
+    id: 2,
+    type: 'test',
+    title: 'Blood Test',
+    titleMl: 'രക്തപരിശോധന',
+    date: '02/03/2024',
+    hospital: 'Primary Health Centre, Ernakulam',
+    hospitalMl: 'പ്രൈമറി ഹെൽത്ത് സെന്റർ, എറണാകുളം',
+    status: 'normal',
+    details: 'Hemoglobin: 13.2 g/dL, Blood Sugar: Normal'
   },
   {
-    date: '2023-12-20',
-    hospital: 'District Hospital, Ernakulam',
-    type: 'Blood Test',
-    status: 'Normal',
-    doctor: 'Dr. Anitha Mol'
+    id: 3,
+    type: 'checkup',
+    title: 'General Health Checkup',
+    titleMl: 'പൊതു ആരോഗ്യ പരിശോധന',
+    date: '20/02/2024',
+    hospital: 'Community Health Centre, Thrissur',
+    hospitalMl: 'കമ്മ്യൂണിറ്റി ഹെൽത്ത് സെന്റർ, തൃശൂർ',
+    status: 'follow-up',
+    details: 'BP: 130/85 mmHg - Mild hypertension, follow-up advised'
+  }
+];
+
+const notifications = [
+  {
+    id: 1,
+    type: 'vaccination',
+    message: 'Annual flu vaccination due',
+    messageMl: 'വാർഷിക ഫ്ലൂ വാക്സിനേഷൻ അടുത്ത തീയതി',
+    date: '10/04/2024',
+    priority: 'medium'
+  },
+  {
+    id: 2,
+    type: 'checkup',
+    message: 'Follow-up for blood pressure monitoring',
+    messageMl: 'രക്തസമ്മർദ്ദം നിരീക്ഷിക്കുന്നതിനുള്ള തുടർനടപടി',
+    date: '05/04/2024',
+    priority: 'high'
   }
 ];
 
 export default function MigrantProfile() {
   const navigate = useNavigate();
+  const [selectedLanguage, setSelectedLanguage] = useState('en');
 
   const handleBack = () => {
     navigate('/');
   };
 
+  const handleDownloadPDF = () => {
+    alert('Health record PDF downloaded successfully!');
+  };
+
   const handleDownloadQR = () => {
-    // Simulate QR code download
     alert('QR Health Card downloaded successfully!');
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return 'bg-health-good/10 text-health-good border-health-good/30';
+      case 'normal':
+        return 'bg-health-good/10 text-health-good border-health-good/30';
+      case 'follow-up':
+        return 'bg-health-warning/10 text-health-warning border-health-warning/30';
+      default:
+        return 'bg-muted/10 text-muted-foreground border-muted/30';
+    }
+  };
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'high':
+        return 'bg-health-critical/10 text-health-critical border-health-critical/30';
+      case 'medium':
+        return 'bg-health-warning/10 text-health-warning border-health-warning/30';
+      default:
+        return 'bg-health-good/10 text-health-good border-health-good/30';
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-backwater">
       {/* Header */}
-      <header className="bg-medical-white shadow-medical">
+      <header className="bg-gradient-trust text-trust-navy-foreground shadow-medical">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <EnhancedButton variant="ghost" onClick={handleBack} className="gap-2">
+              <EnhancedButton variant="ghost" onClick={handleBack} className="gap-2 text-trust-navy-foreground hover:bg-white/10">
                 <ArrowLeft className="h-4 w-4" />
                 Back
               </EnhancedButton>
-              <div>
-                <h1 className="text-xl font-bold text-foreground">Health Profile</h1>
-                <p className="text-sm text-muted-foreground">Kerala Migrant Health System</p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-medical-white rounded-lg flex items-center justify-center p-1">
+                  <img src={swasthyamLogo} alt="Swasthyam Logo" className="w-full h-full object-contain" />
+                </div>
+                <div>
+                  <h1 className="text-lg font-bold">Sahayam Profile</h1>
+                  <p className="text-sm opacity-90">Worker Health Dashboard</p>
+                </div>
               </div>
             </div>
             <LanguageSwitcher />
@@ -101,198 +171,218 @@ export default function MigrantProfile() {
       </header>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Profile Card */}
-          <div className="lg:col-span-1">
-            <Card className="shadow-kerala">
-              <CardHeader className="text-center">
-                <div className="relative mx-auto w-24 h-24 mb-4">
-                  <img
-                    src={workerData.photo}
-                    alt="Profile"
-                    className="w-full h-full rounded-full object-cover border-4 border-primary/20"
-                  />
-                  <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-health-good rounded-full flex items-center justify-center">
-                    <Heart className="h-4 w-4 text-white" />
+        {/* Profile Header */}
+        <Card className="shadow-kerala mb-8">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-6">
+              <Avatar className="h-20 w-20 border-4 border-primary/20">
+                <AvatarImage src="/placeholder-avatar.jpg" />
+                <AvatarFallback className="text-lg bg-primary/10 text-primary">
+                  {workerProfile.nameEn.split(' ').map(n => n[0]).join('')}
+                </AvatarFallback>
+              </Avatar>
+              
+              <div className="flex-1">
+                <h2 className="text-2xl font-bold text-foreground mb-2">
+                  {selectedLanguage === 'ml' ? workerProfile.name : workerProfile.nameEn}
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                  <div className="flex items-center gap-2">
+                    <Shield className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-muted-foreground">UHID:</span>
+                    <span className="font-medium">{workerProfile.uhid}</span>
                   </div>
-                </div>
-                <CardTitle className="text-xl">
-                  {workerData.name}
-                  <span className="block text-base font-normal text-muted-foreground mt-1">
-                    {workerData.nameEn}
-                  </span>
-                </CardTitle>
-                <Badge variant="outline" className="bg-health-good/10 text-health-good border-health-good/30">
-                  <Activity className="h-3 w-3 mr-1" />
-                  Health Status: {workerData.healthStatus}
-                </Badge>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 text-sm">
-                    <User className="h-4 w-4 text-muted-foreground" />
-                    <span>Aadhaar: {workerData.aadhaar}</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm">
-                    <FileText className="h-4 w-4 text-muted-foreground" />
-                    <span>UHID: {workerData.uhid}</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm">
+                  <div className="flex items-center gap-2">
                     <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span>{workerData.contact.phone}</span>
+                    <span className="font-medium">{workerProfile.phoneNumber}</span>
                   </div>
-                  <div className="flex items-center gap-3 text-sm">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    <span>{workerData.contact.email}</span>
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                    <span className="font-medium">{workerProfile.dateOfBirth}</span>
                   </div>
-                  <div className="flex items-center gap-3 text-sm">
+                  <div className="flex items-center gap-2">
+                    <Building className="h-4 w-4 text-muted-foreground" />
+                    <span className="font-medium">
+                      {selectedLanguage === 'ml' ? workerProfile.employer : workerProfile.employerEn}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <span>{workerData.contact.address}</span>
+                    <span className="font-medium">
+                      {selectedLanguage === 'ml' ? workerProfile.workLocation : workerProfile.workLocationEn}
+                    </span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
 
-            {/* QR Health Card */}
-            <Card className="shadow-medical mt-6">
-              <CardHeader className="text-center">
-                <QrCode className="h-8 w-8 text-primary mx-auto mb-2" />
-                <CardTitle className="text-lg">QR Health Card</CardTitle>
+              <div className="flex flex-col gap-2">
+                <EnhancedButton variant="kerala" className="gap-2" onClick={handleDownloadPDF}>
+                  <Download className="h-4 w-4" />
+                  Download PDF
+                </EnhancedButton>
+                <EnhancedButton variant="trust" className="gap-2" onClick={handleDownloadQR}>
+                  <QrCode className="h-4 w-4" />
+                  Download QR Card
+                </EnhancedButton>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Tabs defaultValue="qr-card" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="qr-card">QR Health Card</TabsTrigger>
+            <TabsTrigger value="health-records">Health Records</TabsTrigger>
+            <TabsTrigger value="notifications">Notifications</TabsTrigger>
+            <TabsTrigger value="emergency">Emergency</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="qr-card">
+            <Card className="shadow-medical">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <QrCode className="h-5 w-5" />
+                  Digital Health ID Card
+                </CardTitle>
                 <CardDescription>
-                  Show this QR code at any healthcare facility
+                  Scannable QR code for instant hospital access
                 </CardDescription>
               </CardHeader>
               <CardContent className="text-center">
-                <div className="bg-medical-accent rounded-lg p-6 mb-4">
+                <div className="max-w-md mx-auto">
                   <img 
                     src={qrHealthCard} 
                     alt="QR Health Card" 
-                    className="w-32 h-32 mx-auto rounded-lg"
+                    className="w-full border rounded-lg shadow-kerala"
                   />
+                  <p className="text-sm text-muted-foreground mt-4">
+                    Show this QR code at any hospital for instant access to your health records
+                  </p>
                 </div>
-                <EnhancedButton variant="kerala" className="w-full gap-2" onClick={handleDownloadQR}>
-                  <Download className="h-4 w-4" />
-                  Download QR Card
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="health-records">
+            <Card className="shadow-medical">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Heart className="h-5 w-5" />
+                  Health Records
+                </CardTitle>
+                <CardDescription>
+                  Complete history of vaccinations, tests, and treatments
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {healthRecords.map((record) => (
+                    <div key={record.id} className="border rounded-lg p-4 hover:bg-medical-accent/10 transition-colors">
+                      <div className="flex justify-between items-start mb-3">
+                        <div>
+                          <h4 className="font-medium text-foreground">
+                            {selectedLanguage === 'ml' ? record.titleMl : record.title}
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            {selectedLanguage === 'ml' ? record.hospitalMl : record.hospital}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline" className={getStatusColor(record.status)}>
+                            {record.status}
+                          </Badge>
+                          <span className="text-sm text-muted-foreground">{record.date}</span>
+                        </div>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{record.details}</p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="notifications">
+            <Card className="shadow-medical">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Bell className="h-5 w-5" />
+                  Health Notifications
+                </CardTitle>
+                <CardDescription>
+                  Vaccination reminders and follow-up alerts
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {notifications.map((notification) => (
+                    <div key={notification.id} className="border rounded-lg p-4">
+                      <div className="flex justify-between items-start mb-2">
+                        <Badge variant="outline" className={getPriorityColor(notification.priority)}>
+                          {notification.priority} priority
+                        </Badge>
+                        <span className="text-sm text-muted-foreground">{notification.date}</span>
+                      </div>
+                      <p className="text-sm text-foreground">
+                        {selectedLanguage === 'ml' ? notification.messageMl : notification.message}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="emergency">
+            <Card className="shadow-medical">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Siren className="h-5 w-5 text-health-critical" />
+                  Emergency Information
+                </CardTitle>
+                <CardDescription>
+                  Emergency contacts and critical health information
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="border rounded-lg p-4 bg-health-critical/5">
+                  <h4 className="font-medium text-foreground mb-3">Emergency Contact</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Name:</span>
+                      <span className="font-medium">
+                        {selectedLanguage === 'ml' ? workerProfile.emergencyContact.name : workerProfile.emergencyContact.nameEn}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Relation:</span>
+                      <span className="font-medium">
+                        {selectedLanguage === 'ml' ? workerProfile.emergencyContact.relation : workerProfile.emergencyContact.relationEn}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Phone:</span>
+                      <span className="font-medium">{workerProfile.emergencyContact.phone}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border rounded-lg p-4 bg-health-warning/5">
+                  <h4 className="font-medium text-foreground mb-3">Critical Health Alerts</h4>
+                  <div className="flex items-center gap-2 text-health-warning">
+                    <AlertCircle className="h-4 w-4" />
+                    <span className="text-sm">Mild hypertension - requires monitoring</span>
+                  </div>
+                </div>
+
+                <EnhancedButton variant="medical" className="w-full gap-2">
+                  <Phone className="h-4 w-4" />
+                  Call Emergency Helpline: 108
                 </EnhancedButton>
               </CardContent>
             </Card>
-          </div>
-
-          {/* Main Content */}
-          <div className="lg:col-span-2">
-            <Tabs defaultValue="records" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="records">Health Records</TabsTrigger>
-                <TabsTrigger value="emergency">Emergency Info</TabsTrigger>
-                <TabsTrigger value="settings">Settings</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="records">
-                <Card className="shadow-medical">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Stethoscope className="h-5 w-5" />
-                      Recent Health Records
-                    </CardTitle>
-                    <CardDescription>
-                      Your recent medical consultations and test results
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {healthRecords.map((record, index) => (
-                        <div key={index} className="border rounded-lg p-4 hover:bg-medical-accent/20 transition-colors">
-                          <div className="flex justify-between items-start mb-2">
-                            <div>
-                              <h4 className="font-medium text-foreground">{record.type}</h4>
-                              <p className="text-sm text-muted-foreground">{record.hospital}</p>
-                            </div>
-                            <Badge 
-                              variant="outline" 
-                              className={record.status === 'Normal' || record.status === 'Negative' 
-                                ? 'bg-health-good/10 text-health-good border-health-good/30' 
-                                : 'bg-health-warning/10 text-health-warning border-health-warning/30'
-                              }
-                            >
-                              {record.status}
-                            </Badge>
-                          </div>
-                          <div className="flex justify-between items-center text-sm text-muted-foreground">
-                            <span className="flex items-center gap-1">
-                              <Calendar className="h-3 w-3" />
-                              {record.date}
-                            </span>
-                            <span>Dr. {record.doctor}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="emergency">
-                <Card className="shadow-medical">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Phone className="h-5 w-5" />
-                      Emergency Contact Information
-                    </CardTitle>
-                    <CardDescription>
-                      Contact details for medical emergencies
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="bg-health-critical/5 border border-health-critical/20 rounded-lg p-4">
-                      <h4 className="font-medium text-foreground mb-2">Primary Emergency Contact</h4>
-                      <div className="space-y-2 text-sm">
-                        <p><strong>Name:</strong> {workerData.emergencyContact.name}</p>
-                        <p><strong>Phone:</strong> {workerData.emergencyContact.phone}</p>
-                        <p><strong>Relation:</strong> {workerData.emergencyContact.relation}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="bg-trust-navy/5 border border-trust-navy/20 rounded-lg p-4">
-                      <h4 className="font-medium text-foreground mb-2">Emergency Helplines</h4>
-                      <div className="space-y-2 text-sm">
-                        <p><strong>Kerala Health Emergency:</strong> 104</p>
-                        <p><strong>National Emergency:</strong> 108</p>
-                        <p><strong>Migrant Helpline:</strong> 1800-425-1966</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="settings">
-                <Card className="shadow-medical">
-                  <CardHeader>
-                    <CardTitle>Profile Settings</CardTitle>
-                    <CardDescription>
-                      Manage your profile preferences and privacy settings
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-4">
-                      <EnhancedButton variant="medical" className="w-full justify-start">
-                        Update Contact Information
-                      </EnhancedButton>
-                      <EnhancedButton variant="medical" className="w-full justify-start">
-                        Change Language Preference
-                      </EnhancedButton>
-                      <EnhancedButton variant="medical" className="w-full justify-start">
-                        Privacy Settings
-                      </EnhancedButton>
-                      <EnhancedButton variant="medical" className="w-full justify-start">
-                        Export Health Data
-                      </EnhancedButton>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </div>
-        </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
